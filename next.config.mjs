@@ -28,7 +28,6 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: { serverComponentsExternalPackages: ["better-sqlite3"] },
   poweredByHeader: false,
   compress: true,
   images: { unoptimized: true }, // site uses plain <img>; keeps the image optimizer switched off

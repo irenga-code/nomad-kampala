@@ -1,5 +1,5 @@
 // Menu seed. No prices are shown on the site: customers ask for prices on WhatsApp.
-// Edit here and bump SCHEMA_VERSION in db.ts to re-seed (orders and reservations are kept).
+// Edit here; listMenu in db.ts reads this file. Menu ids are the 1-based position, so only append new items.
 export type MenuSeed = {
   slug: string;
   name: string;

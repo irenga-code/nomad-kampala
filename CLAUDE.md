@@ -4,7 +4,7 @@ Premium night club website for NOMAD Kampala (Bunga - Ggaba Road, opposite Shell
 Goal: look professional and rank for searches like "night club in Kampala" / "night clubs in Uganda".
 
 ## Stack
-Next.js 14 (App Router, TypeScript), SQLite via better-sqlite3 (file: `data/nomad.db`, auto-created and seeded in `src/lib/db.ts`), plain CSS in `src/app/globals.css`.
+Next.js 14 (App Router, TypeScript), NO database for now: `src/lib/db.ts` serves events, gallery, archive and menu from local data files; orders/reservations are stubs in `src/lib/storage.ts` (API returns 503 until Supabase is connected), plain CSS in `src/app/globals.css`.
 
 ## Images (IMPORTANT: where Claude Code finds the pictures)
 - Cleaned, web-ready images: `public/images/` (served at `/images/<file>`). Use these only.
@@ -41,7 +41,7 @@ Dark luxury theme (black, gold, cream) in `src/app/globals.css`. Home page: spli
 - Weekly nights: Tue Tipsy Tuesday, Thu Run The City, Fri Swift Fridays (African Simba Events), Sat The After Dark (Just Between Friends), Sun Sunday School.
 - Swift Fridays and The After Dark use finished poster banners (`public/images/banners/`, events.banner=1: title is on the artwork, so the card text is hidden).
 - Archive: `/archive`, data in `src/lib/archive-data.ts`, posters in `public/images/archive/` (named YYYY-MM-DD-title.jpg; dates kept on posters, only Instagram UI removed). `country` set => shown as "International artist" (Eivin Cena, France; Afrique, Rwanda).
-- To add a night: drop the cleaned poster in `public/images/archive/`, add an entry to ARCHIVE, bump SCHEMA_VERSION in `src/lib/db.ts` (re-seeds events/gallery/archive, reservations are kept).
+- To add a night: drop the cleaned poster in `public/images/archive/`, add an entry to ARCHIVE, nothing else needed (db.ts reads the file directly).
 - Image cleaning scripts: `tools/uiclean.py` (removes Instagram arrows/dots/icons) and `tools/clean3.py` (job list with manual coordinates). Originals in `originals/batch2/`. Paths inside are absolute to the original machine: edit before reuse.
 
 ## Update (Nov 21 2026, batch 3)
@@ -51,7 +51,7 @@ Dark luxury theme (black, gold, cream) in `src/app/globals.css`. Home page: spli
 - VERCEL: the filesystem is read-only except /tmp, so the SQLite DB lives in /tmp there and reservations are NOT persistent. Move reservations to Vercel Postgres / Turso / Supabase before relying on them. The reserve form offers a WhatsApp confirm button as a fallback.
 
 ## Update (Nov 21 2026, Menu / Shop)
-- `/menu`: Bottle Service, Cocktails & Drinks, Kitchen & Bites with tabs, search, UGX prices. Items live in `src/lib/menu-data.ts` (PRICES ARE ESTIMATES: confirm with NOMAD, then bump SCHEMA_VERSION in db.ts to re-seed; orders and reservations are kept).
+- `/menu`: Bottle Service, Cocktails & Drinks, Kitchen & Bites with tabs, search, UGX prices. Items live in `src/lib/menu-data.ts` (PRICES ARE ESTIMATES: confirm with NOMAD, no re-seed step; menu ids are list positions, so only append items).
 - Cart: `components/CartProvider.tsx` (context, localStorage, drawer, floating bar). Checkout posts to `/api/orders`, which re-prices from the DB (never trusts client totals), saves to `orders`, and for "Table reservation" also inserts a row in `reservations`. WhatsApp link is built client-side with the itemised list.
 - Admin (`/admin`) shows reservations and menu orders.
 - Spinning bottles: `components/BottleRing.tsx` (pure CSS 3D ring) with transparent cutouts in `public/images/menu/` made by `tools/cutout.py`.
@@ -70,7 +70,7 @@ Dark luxury theme (black, gold, cream) in `src/app/globals.css`. Home page: spli
 - 'The experience' photo is a PicSlider: black-label photo, sparklers, confetti fade one after another.
 - Home gallery ('Inside our nights') = endless auto-scrolling strip of rounded photo cards like africansimbaevents.com (GalleryStrip, pauses on hover, click opens lightbox) + 'See full gallery'.
 - Sound feature removed entirely (no toggle, no sounds). Hero photos: lasers, beams, projectors, stage (landscape only).
-- Menu: added Luc Belaire Luxe, Belaire Rare Rosé (Alcohol-Removed), Belaire Collection (5-bottle photo kept whole), Clase Azul Reposado (SCHEMA_VERSION 8; gift-box version removed); also in BottleMarquee.
+- Menu: added Luc Belaire Luxe, Belaire Rare Rosé (Alcohol-Removed), Belaire Collection (5-bottle photo kept whole), Clase Azul Reposado (gift-box version removed); also in BottleMarquee.
 - International artists cards = endless passing marquee (pauses on hover).
 
 ## Security hardening (applied)
@@ -80,3 +80,5 @@ Dark luxury theme (black, gold, cream) in `src/app/globals.css`. Home page: spli
 - JSON-LD escaped via toLd(); cart localStorage validated; window.open opener detached; db.ts is "server-only".
 - STILL TODO: move the database off /tmp (Supabase/Turso/Vercel Postgres); add Vercel Firewall rate limits; `npm audit` still lists advisories for the whole Next 14 line (a move to a patched newer Next major is the long-term fix).
 - CSP: 'unsafe-eval' and no upgrade-insecure-requests ONLY in dev (NODE_ENV!=production); without this, 'next dev' blocked hydration and all JS sliders froze.
+
+- better-sqlite3 removed (Vercel native build). TODO: connect Supabase in src/lib/storage.ts (saveOrder/saveReservation) and db.ts (listOrders/listReservations); gallery photos are listed in src/lib/gallery-files.ts (add new numbered jpgs there).

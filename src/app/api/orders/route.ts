@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDb, listEvents } from "@/lib/db";
+import { getMenuItem, listEvents } from "@/lib/db";
+import { saveOrder } from "@/lib/storage";
 import { bad, clean, limited, readJson, serverError, validDate, validPhone } from "@/lib/validate";
 
 export async function POST(req: Request) {
@@ -30,33 +31,21 @@ export async function POST(req: Request) {
       want.set(id, Math.min(50, (want.get(id) ?? 0) + qty));
     }
 
-    const db = getDb();
-    const get = db.prepare("SELECT id,name FROM menu_items WHERE id=? AND available=1");
     const lines: { id: number; name: string; qty: number }[] = [];
     for (const [id, qty] of want) {
-      const item = get.get(id) as { id: number; name: string } | undefined;
+      const item = getMenuItem(id);
       if (!item) return bad("Some items are no longer available. Please refresh the menu.");
-      lines.push({ ...item, qty });
+      lines.push({ id: item.id, name: item.name, qty });
     }
-    const total = 0; // no prices on the site: customers ask on WhatsApp
 
-    const run = db.transaction(() => {
-      const summary = lines.map((l) => `${l.qty} x ${l.name}`).join(", ");
-      const orderId = Number(
-        db.prepare("INSERT INTO orders (name,phone,kind,date,guests,event_slug,notes,items,total) VALUES (?,?,?,?,?,?,?,?,?)")
-          .run(name, phone, kind, kind === "table" ? date : null, kind === "table" ? guests : null, slug || null, notes || null, JSON.stringify(lines), total).lastInsertRowid
-      );
-      let reservationId: number | null = null;
-      if (kind === "table") {
-        reservationId = Number(
-          db.prepare("INSERT INTO reservations (name,phone,email,event_slug,date,guests,notes) VALUES (?,?,?,?,?,?,?)")
-            .run(name, phone, null, slug || null, date, guests, `Pre-order #${orderId}: ${summary}${notes ? ` | ${notes}` : ""}`.slice(0, 900)).lastInsertRowid
-        );
-        db.prepare("UPDATE orders SET reservation_id=? WHERE id=?").run(reservationId, orderId);
-      }
-      return { orderId, reservationId };
+    const { orderId, reservationId } = await saveOrder({
+      name, phone, kind,
+      date: kind === "table" ? date : null,
+      guests: kind === "table" ? guests : null,
+      event_slug: slug || null,
+      notes: notes || null,
+      items: lines,
     });
-    const { orderId, reservationId } = run();
     return NextResponse.json({ ok: true, id: orderId, reservationId }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {
     return serverError(e);

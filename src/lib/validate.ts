@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
+import { PersistenceUnavailableError } from "@/lib/storage";
 
 export const MAX_BODY = 8 * 1024; // 8 KB is plenty for a cart
 
 export const bad = (error: string, status = 400) =>
   NextResponse.json({ error }, { status, headers: { "Cache-Control": "no-store" } });
 export const serverError = (e: unknown) => {
+  if (e instanceof PersistenceUnavailableError) {
+    return bad("Online booking is being set up. Please contact us on WhatsApp to place your order or reserve a table.", 503);
+  }
   console.error("[api]", e);
   return bad("Something went wrong. Please try again or contact us on WhatsApp.", 500);
 };

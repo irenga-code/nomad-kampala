@@ -19,6 +19,7 @@ export default function Admin() {
   return (
     <section className="block">
       <div className="container">
+        <p className="msg" style={{ marginBottom: "1.5rem" }}>Order and reservation storage is not connected yet (Supabase coming). Nothing is saved on the server for now: customers are asked to confirm on WhatsApp.</p>
         <h1>Reservations ({rows.length})</h1>
         <div style={{ overflowX: "auto", marginTop: "1.5rem" }}>
           <table className="admin">

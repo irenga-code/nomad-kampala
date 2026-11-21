@@ -1,6 +1,6 @@
 // Past nights shown in /archive. Text is transcribed from the club's own posters.
 // To add a night: put the cleaned poster(s) in public/images/archive/ and add an entry here
-// (the archive table is re-seeded when SCHEMA_VERSION in db.ts is bumped), or insert a row in the DB.
+// (entries are read straight from this file by listArchive in db.ts).
 export type ArchiveSeed = {
   slug: string;
   title: string;

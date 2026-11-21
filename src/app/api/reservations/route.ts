@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getDb, listEvents } from "@/lib/db";
+import { listEvents } from "@/lib/db";
+import { saveReservation } from "@/lib/storage";
 import { bad, clean, limited, readJson, serverError, validDate, validEmail, validPhone } from "@/lib/validate";
 
 export async function POST(req: Request) {
@@ -18,9 +19,7 @@ export async function POST(req: Request) {
     if (email && !validEmail(email)) return bad("Invalid email.");
     if (slug && !listEvents().some((e) => e.slug === slug)) return bad("Unknown night.");
 
-    getDb()
-      .prepare("INSERT INTO reservations (name,phone,email,event_slug,date,guests,notes) VALUES (?,?,?,?,?,?,?)")
-      .run(name, phone, email || null, slug || null, date, guests, notes || null);
+    await saveReservation({ name, phone, email: email || null, event_slug: slug || null, date, guests, notes: notes || null });
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {
     return serverError(e);
