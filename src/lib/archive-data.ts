@@ -1,0 +1,178 @@
+// Past nights shown in /archive. Text is transcribed from the club's own posters.
+// To add a night: put the cleaned poster(s) in public/images/archive/ and add an entry here
+// (the archive table is re-seeded when SCHEMA_VERSION in db.ts is bumped), or insert a row in the DB.
+export type ArchiveSeed = {
+  slug: string;
+  title: string;
+  date: string; // YYYY-MM-DD
+  night: string | null; // slug of a weekly night in the events table
+  headline: string;
+  details: string;
+  country: string | null; // set for international artists
+  images: string[];
+};
+
+const A = "/images/archive/";
+
+export const ARCHIVE: ArchiveSeed[] = [
+  {
+    slug: "party-with-eivin-cena",
+    title: "Party with Eivin Cena",
+    date: "2026-11-12",
+    night: null,
+    headline: "Eivin Cena, live from France",
+    details: "EP release: The Journey to Greatness by Komando Blacqdudez. Presented by Thanklish Records & Star Link Promotions.",
+    country: "France",
+    images: [`${A}2026-11-12-eivin-cena-1.jpg`, `${A}2026-11-12-eivin-cena-2.jpg`],
+  },
+  {
+    slug: "tipsy-tuesday-2026-11-10",
+    title: "Tipsy Tuesday",
+    date: "2026-11-10",
+    night: "tipsy-tuesday",
+    headline: "Pearl Music Band live",
+    details: "Hosted by Roger Baros and Oscar Gadgets. Music by DJ Kezil, MC Rash, Magz Deejay, DJ Nector and DJ Atah.",
+    country: null,
+    images: [`${A}2026-11-10-tipsy-tuesday.jpg`],
+  },
+  {
+    slug: "park-and-chill",
+    title: "Park and Chill",
+    date: "2026-11-08",
+    night: null,
+    headline: "Afrique, live from Rwanda",
+    details: "From executive producer Urban Ratibu, with Urban Empire, Martell and OBO.",
+    country: "Rwanda",
+    images: [`${A}2026-11-08-park-and-chill-1.jpg`, `${A}2026-11-08-park-and-chill-2.jpg`],
+  },
+  {
+    slug: "swift-fridays-2026-11-06",
+    title: "Swift Fridays",
+    date: "2026-11-06",
+    night: "swift-fridays",
+    headline: "Swift Fridays line-up night",
+    details: "Organized by African Simba Events, featuring Martell Blue Swift.",
+    country: null,
+    images: [`${A}2026-11-06-swift-fridays.jpg`],
+  },
+  {
+    slug: "run-the-city-2026-11-05",
+    title: "Run The City",
+    date: "2026-11-05",
+    night: "run-the-city",
+    headline: "Milton Kizzy live in Kampala",
+    details: "Run The City Thursday, with Star Link Promotions.",
+    country: null,
+    images: [`${A}2026-11-05-run-the-city.jpg`],
+  },
+  {
+    slug: "tipsy-tuesday-2026-11-03",
+    title: "Tipsy Tuesday",
+    date: "2026-11-03",
+    night: "tipsy-tuesday",
+    headline: "Pearl Music Band",
+    details: "Hosted by Roger Baros and Oscar Gadgets. Music by DJ Kezil, MC Rash, Magz Deejay and DJ Nector.",
+    country: null,
+    images: [`${A}2026-11-03-tipsy-tuesday.jpg`],
+  },
+  {
+    slug: "sunday-school-2026-11-01",
+    title: "Sunday School",
+    date: "2026-11-01",
+    night: "sunday-school",
+    headline: "Hosted by Urban Ratibu, with Bad Bunny",
+    details: "Music by DJ Vee, DJ Kerb, DJ Nectar, Urbanstar, Petrie MC and Omi MC.",
+    country: null,
+    images: [`${A}2026-11-01-sunday-school.jpg`],
+  },
+  {
+    slug: "the-after-dark-halloween",
+    title: "The After Dark: Halloween Edition",
+    date: "2026-10-31",
+    night: "the-after-dark",
+    headline: "Halloween night at NOMAD",
+    details: "Music by DJ Kerb, DJ Benji, Jeje Star and Shakib Cham. Hype by Alleh MVP, Petrie MC and Unique MC.",
+    country: null,
+    images: [`${A}2026-10-31-the-after-dark-halloween.jpg`],
+  },
+  {
+    slug: "tipsy-tuesday-2026-10-27",
+    title: "Tipsy Tuesday",
+    date: "2026-10-27",
+    night: "tipsy-tuesday",
+    headline: "Henry Tigan with Mavoko Band",
+    details: "Hosted by Roger Baros, Oscar Gadgets and Big Hule. Music by DJ Kezil, MC Rash, Magz Deejay, DJ Nector and DJ Atah.",
+    country: null,
+    images: [1, 2, 3, 4].map((n) => `${A}2026-10-27-tipsy-tuesday-${n}.jpg`),
+  },
+  {
+    slug: "the-after-dark-2026-10-24",
+    title: "The After Dark",
+    date: "2026-10-24",
+    night: "the-after-dark",
+    headline: "Just Between Friends presents The After Dark",
+    details: "Music by DJ Kerb, DJ Benji, DJ Zato and Shakib Cham. Hype by Alleh MVP, Petrie MC and Unique MC.",
+    country: null,
+    images: [`${A}2026-10-24-the-after-dark.jpg`],
+  },
+  {
+    slug: "one-year-anniversary",
+    title: "Nomad Kampala One Year Anniversary",
+    date: "2026-10-30",
+    night: "swift-fridays",
+    headline: "Crayon performing live",
+    details: "NOMAD's first birthday with African Simba Events and Martell Blue Swift.",
+    country: null,
+    images: [`${A}2026-10-30-one-year-anniversary-crayon.jpg`],
+  },
+  {
+    slug: "run-the-city-2026-10-15",
+    title: "Run The City",
+    date: "2026-10-15",
+    night: "run-the-city",
+    headline: "Hosted by Fred Muzik Pro",
+    details: "Music by DJ Benji, Credit Mcee, Topia Twins and DJ Gero Humblelion, with Gibz, Stuart, Chagua, Bella and Smarty. Star Link Promotions.",
+    country: null,
+    images: [`${A}2026-10-15-run-the-city.jpg`],
+  },
+  {
+    slug: "swift-fridays-ladies-night-out",
+    title: "Swift Fridays: Ladies Night Out",
+    date: "2026-10-16",
+    night: "swift-fridays",
+    headline: "Hosted by Chef Amandine, from Kigali",
+    details: "Ladies Night Out with African Simba Events and Martell Blue Swift.",
+    country: "Rwanda",
+    images: [`${A}2026-10-16-swift-fridays-ladies-night.jpg`],
+  },
+  {
+    slug: "sunday-school-2026-10-11",
+    title: "Sunday School",
+    date: "2026-10-11",
+    night: "sunday-school",
+    headline: "Plug Band, hosted by Urban Ratibu",
+    details: "With Bad Bunny. Music by DJ Vee, DJ Kerb, DJ Nectar, Urbanstar, Petrie MC and Omi MC.",
+    country: null,
+    images: [`${A}2026-10-11-sunday-school-1.jpg`, `${A}2026-10-11-sunday-school-2.jpg`],
+  },
+  {
+    slug: "made-in-kla-experience",
+    title: "Made in KLA Experience",
+    date: "2026-10-08",
+    night: null,
+    headline: "Deobi, live from Nigeria",
+    details: "A Martell exclusive event by OBO Entertainment at NOMAD Kampala.",
+    country: "Nigeria",
+    images: [`${A}2026-10-08-made-in-kla-deobi.jpg`],
+  },
+  {
+    slug: "the-after-dark-dj-sonia",
+    title: "The After Dark: DJ Sonia",
+    date: "2026-09-19",
+    night: "the-after-dark",
+    headline: "Guest DJ Sonia, from Rwanda",
+    details: "Just Between Friends presents The After Dark. Music by DJ Kerb, DJ Benji and Jeje Star. Hype by Alleh MVP and Unique MC.",
+    country: "Rwanda",
+    images: [`${A}2026-09-19-the-after-dark-dj-sonia-1.jpg`, `${A}2026-09-19-the-after-dark-dj-sonia-2.jpg`],
+  },
+];
